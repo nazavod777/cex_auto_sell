@@ -186,8 +186,8 @@ class KuCoinAutoSell:
             token_base_precision: float = await self.get_token_base_increment(session=session)
 
             if not token_base_precision:
-                logger.error(f'Wrong Trade Pair: {self.token_from.upper()}')
-                return
+                logger.error(f'Error When Getting Base Precision: {self.token_from.upper()}, Using 0.1')
+                token_base_precision: float = 0.1
 
             token_from_balance: float = round(token_from_balance, len(str(token_base_precision).split('.')[-1]))
 
