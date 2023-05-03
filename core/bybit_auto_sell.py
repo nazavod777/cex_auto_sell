@@ -78,7 +78,7 @@ class ByBitAutoSell:
         for current_balance in loads(response_text)['result']['list']:
             if current_balance['accountType'] == 'SPOT':
                 if current_balance['coin']:
-                    return float(current_balance['coin'][0]['walletBalance'])
+                    return float(current_balance['coin'][0]['free'])
 
         return None
 
