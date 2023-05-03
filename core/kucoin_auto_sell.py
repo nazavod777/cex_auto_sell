@@ -2,6 +2,7 @@ import asyncio
 import base64
 import hashlib
 import hmac
+import math
 from json import dumps, loads
 from time import time
 from uuid import uuid4
@@ -189,7 +190,9 @@ class KuCoinAutoSell:
                 logger.error(f'Error When Getting Base Precision: {self.token_from.upper()}, Using 0.1')
                 token_base_precision: float = 0.1
 
-            token_from_balance: float = round(token_from_balance, len(str(token_base_precision).split('.')[-1]))
+            token_from_balance: float = math.floor(
+                token_from_balance * 10 ** len(str(token_base_precision).split('.')[1])) / 10 ** len(
+                str(token_base_precision).split('.')[1])
 
             logger.info(f'{self.token_from.upper()} - {token_from_balance}')
 
