@@ -155,6 +155,20 @@ class KuCoinAutoSell:
 
             logger.info(str(self.start_sale_time - int(str(loads(response_text)['data'])[:10])) + ' sec.')
 
+    async def get_token_base_increment(self,
+                                       session: aiohttp.client.ClientSession) -> float | None:
+        response_text: dict = await self.bypass_invalid_request_ip(target_function=session.get,
+                                                                   request_url='/api/v2/symbols',
+                                                                   session=session,
+                                                                   request_type='GET')
+
+        for current_token in response_text['data']:
+            if current_token['baseCurrency'].upper() == self.token_from.upper() \
+                    and current_token['quoteCurrency'].upper() == self.token_to.upper():
+                return float(current_token['baseIncrement'])
+
+        return None
+
     async def main_work(self) -> None:
         if self.proxy_str:
             connector = ProxyConnector.from_url(self.proxy_str)
@@ -169,7 +183,15 @@ class KuCoinAutoSell:
                 logger.error(f'Zero Token Balance: {self.token_from.upper()}')
                 return
 
-            logger.info(f'{self.token_from.upper()} - {token_from_balance:.9f}')
+            token_base_precision: float = await self.get_token_base_increment(session=session)
+
+            if not token_base_precision:
+                logger.error(f'Wrong Trade Pair: {self.token_from.upper()}')
+                return
+
+            token_from_balance: float = round(token_from_balance, len(str(token_base_precision).split('.')[-1]))
+
+            logger.info(f'{self.token_from.upper()} - {token_from_balance}')
 
             await self.run_tasks(session=session,
                                  token_from_balance=token_from_balance)
