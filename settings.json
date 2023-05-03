@@ -2,10 +2,10 @@
   "api_key": "",
   "api_secret": "",
   "api_pass_phrase": "",
-  "start_sale_time": 1683071531,
+  "start_sale_time": 1683115199,
   "sale_price": 1,
-  "threads": 1,
-  "requests_count": 5,
-  "endpoint_url": "https://api.bybit.com",
+  "threads": 3,
+  "requests_count": 10,
+  "endpoint_url": "https://api.kucoin.com",
   "proxy": ""
 }
