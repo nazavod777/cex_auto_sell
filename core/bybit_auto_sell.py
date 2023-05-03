@@ -145,7 +145,7 @@ class ByBitAutoSell:
 
     async def get_token_base_precision(self,
                                        session: aiohttp.client.ClientSession) -> float | None:
-        current_headers: dict = await self.make_auth(request_data=f'accountType=SPOT&coin={self.token_from}')
+        current_headers: dict = await self.make_auth()
         session.headers.update(current_headers)
 
         response_text: str = await bypass_bybit_errors(current_function=session.get,
@@ -175,8 +175,8 @@ class ByBitAutoSell:
             token_base_precision: float = await self.get_token_base_precision(session=session)
 
             if not token_base_precision:
-                logger.error(f'Wrong Trade Pair: {self.token_from.upper()}')
-                return
+                logger.error(f'Error When Getting Base Precision: {self.token_from.upper()}, Using 0.1')
+                token_base_precision: float = 0.1
 
             token_from_balance: float = round(token_from_balance, len(str(token_base_precision).split('.')[-1]))
             logger.info(f'{self.token_from.upper()} - {token_from_balance}')
