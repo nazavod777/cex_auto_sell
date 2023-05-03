@@ -1,3 +1,4 @@
 aiohttp>=3.8.3
 uuid>=1.30
 loguru>=0.6.0
+aiohttp-proxy>=0.1.2
